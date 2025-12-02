@@ -1,4 +1,4 @@
-import { db } from "/js/firebase.js";
+import { db } from "js/firebase.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 function showError(msg) {
@@ -58,3 +58,4 @@ document.getElementById("adminForm").addEventListener("submit", async (e) => {
   sessionStorage.setItem("userQID", qid);
   window.location.href = "index.html";
 });
+
