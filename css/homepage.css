@@ -29,13 +29,14 @@ body {
 .logo {
     font-size: 22px;
     font-weight: bold;
+    color: #8C2E7C;
 }
 
 /* Search Bar */
 .search-bar {
     padding: 8px 15px;
     width: 400px;
-    border: 1px solid #ccc;
+    border: 1px solid #0E112E;
     border-radius: 40px;
 }
 
@@ -43,13 +44,18 @@ body {
 .top-panel .right a {
     margin-left: 15px;
     text-decoration: none;
-    color: #333;
+    color: #0E112E;
     font-size: 16px;
+}
+
+.top-panel nav a:hover,
+.top-panel .right a:hover {
+    color: #8C2E7C;
 }
 
 .register-btn {
     padding: 6px 12px;
-    background: #14213D;
+    background: #8C2E7C;
     color: white !important;
     border-radius: 6px;
 }
@@ -58,7 +64,7 @@ body {
   position: absolute;
   top: 40px;
   background: white;
-  border: 1px solid #ccc;
+  border: 1px solid #0E112E;
   width: 150px;
   display: none;
   flex-direction: column;
@@ -69,11 +75,12 @@ body {
 .dropdown-content a {
   padding: 8px;
   text-decoration: none;
-  color: #333;
+  color: #0E112E;
 }
 
 .dropdown-content a:hover {
-  background: #eee;
+  background: #8C2E7C;
+  color: white;
 }
 
 .dropdown-btn {
@@ -111,6 +118,7 @@ body {
   top: 10px;
   overflow: hidden;
   display: flex;
+  border: 2px solid #0E112E;
 }
 
 .fullCard {
@@ -121,7 +129,6 @@ body {
   flex-direction: column;
   padding: 15px;
   transition: transform 0.6s ease, opacity 0.6s;
-  position: relative;
   position: absolute;
 }
 
@@ -132,20 +139,25 @@ body {
 
 .arrow-btn {
     font-size: 25px;
-    border: 1px solid #14213D ;
+    border: 1px solid #8C2E7C;
     background: white;
     border-radius: 70px;
-    color: #14213D;
+    color: #8C2E7C;
     cursor: pointer;
     padding: 10px;
     z-index: 100;
+}
+
+.arrow-btn:hover {
+    background: #8C2E7C;
+    color: white;
 }
 
 .eventTitle {
     position: absolute;
     text-align: center;
     font-size: 28px;
-    color: #14213D;
+    color: #8C2E7C;
     font-weight: 700;
     z-index: 100;
     top: 420px;
@@ -156,14 +168,19 @@ body {
   position: absolute;
   z-index: 100;
   text-decoration: none;
-  padding: 5px 10px;
-  background: #14213D;
+  padding: 15px 25px;
+  background: #0E112E;
   color: white;
   border-radius: 28px;
   cursor: pointer;
-  top: 350px;
+  top: 330px;
   left: 210px;
 }
+
+.eventRegisterButton:hover {
+  background: #8C2E7C;
+}
+
 
 /* WORKSHOPS */
 .workshopsContainer {
@@ -174,7 +191,7 @@ body {
 .workshopsContainer h2 {
   font-size: 28px;
   margin-bottom: 20px;
-  color: #14213d;
+  color: #8C2E7C;
 }
 
 .workshopCard {
@@ -188,6 +205,7 @@ body {
   margin-bottom: 25px;
   height: 60vh;            
   overflow: hidden;
+  border-left: 6px solid #0E112E;
 }
 
 .workspaceContent {
@@ -201,7 +219,7 @@ body {
 .workspaceContent h3 {
   font-size: 24px;
   margin-bottom: 10px;
-  color: #14213d;
+  color: #8C2E7C;
 }
 
 .workspaceContent p {
@@ -212,7 +230,7 @@ body {
 
 .registerToWorkshop {
   padding: 12px 20px;
-  background: #14213d;
+  background: #0E112E;
   color: white;
   border: none;
   border-radius: 6px;
@@ -222,7 +240,7 @@ body {
 }
 
 .registerToWorkshop:hover {
-  background: black;
+  background: #8C2E7C;
 }
 
 .workshopPoster {
@@ -265,6 +283,7 @@ body {
   width: 25%;
   min-height: 320px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  border-top: 5px solid #8C2E7C;
 }
 
 .cal-header {
@@ -272,6 +291,7 @@ body {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
+  color: #0E112E;
 }
 
 .cal-grid {
@@ -284,6 +304,7 @@ body {
   font-weight: bold;
   text-align: center;
   font-size: 13px;
+  color: #8C2E7C;
 }
 
 .day {
@@ -298,7 +319,7 @@ body {
 }
 
 .day:hover {
-  background: #14213D;
+  background: #0E112E;
   color: white;
   cursor: pointer;
 }
@@ -308,7 +329,7 @@ body {
 }
 
 .cal-btn {
-  background: #14213D;
+  background: #0E112E;
   color: white;
   border: none;
   padding: 7px 14px;
@@ -316,7 +337,9 @@ body {
   cursor: pointer;
 }
 
-
+.cal-btn:hover {
+  background: #8C2E7C;
+}
 
 
 /* ABOUT US */
@@ -327,11 +350,11 @@ body {
     padding: 40px;
     border-radius: 15px;
     text-align: center;
+    border-left: 6px solid #0E112E;
 }
 
 .dropdown-btn :hover{
     text-decoration: underline;
-
 }
 
 .reg-btn{
@@ -343,4 +366,10 @@ body {
     border: none;
     height: 40px;
     width: 100px;
+    background: #8C2E7C;
+    color: white;
+}
+
+.reg-btn:hover {
+    background: #0E112E;
 }
