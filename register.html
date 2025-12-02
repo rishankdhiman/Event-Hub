@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - TechThrive</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <div class="main">
+
+    <!-- LEFT SIDE IMAGE -->
+    <div class="left">
+      <img src="/assets/images/loginBackground.jpg" alt="">
+    </div>
+
+    <!-- RIGHT SIDE FORM -->
+    <div class="right">
+
+      <!-- TOGGLE BUTTONS -->
+      <div class="userType">
+        <button class="type-btn active" id="studentBtn">Student</button>
+        <button class="type-btn" id="adminBtn">Admin</button>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-box">
+
+        <h1 id="formTitle">Student Login</h1>
+
+        <!-- STUDENT FORM -->
+        <form id="studentForm">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="s_email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="s_password" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <!-- ADMIN FORM -->
+        <form id="adminForm" style="display:none;">
+          <div class="form-group">
+            <label>Admin Email</label>
+            <input type="email" id="a_email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="a_password" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const sBtn = document.getElementById("studentBtn");
+    const aBtn = document.getElementById("adminBtn");
+    const sForm = document.getElementById("studentForm");
+    const aForm = document.getElementById("adminForm");
+    const title = document.getElementById("formTitle");
+
+    sBtn.onclick = () => {
+      sBtn.classList.add("active");
+      aBtn.classList.remove("active");
+      sForm.style.display = "block";
+      aForm.style.display = "none";
+      title.innerText = "Student Login";
+    };
+
+    aBtn.onclick = () => {
+      aBtn.classList.add("active");
+      sBtn.classList.remove("active");
+      sForm.style.display = "none";
+      aForm.style.display = "block";
+      title.innerText = "Admin Login";
+    };
+  </script>
+
+</body>
+</html>

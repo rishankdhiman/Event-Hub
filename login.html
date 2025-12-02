@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - TechThrive</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <div class="userType">
+      <button class="type-btn active" id="studentBtn">Student</button>
+      <button class="type-btn" id="adminBtn">Admin</button>
+    </div>
+
+    <section class="form-card">
+      <h1 id="formTitle">Student Login</h1>
+      <p id="errorBox"></p>
+
+      <form id="studentForm" class="switchForm">
+        <div class="form-group">
+          <label>Q.ID</label>
+          <input type="number" id="s_qid" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="s_password" required />
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+
+      <form id="adminForm" class="switchForm" style="display: none">
+        <div class="form-group">
+          <label>Q.ID</label>
+          <input type="text" id="a_qid" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="a_password" required />
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="./js/firebase.js"></script>
+  <script type="module" src="login.js"></script>
+
+  <script>
+    const studentBtn = document.getElementById("studentBtn");
+    const adminBtn = document.getElementById("adminBtn");
+    const studentForm = document.getElementById("studentForm");
+    const adminForm = document.getElementById("adminForm");
+    const formTitle = document.getElementById("formTitle");
+
+    studentBtn.onclick = () => {
+      studentBtn.classList.add("active");
+      adminBtn.classList.remove("active");
+      studentForm.style.display = "block";
+      adminForm.style.display = "none";
+      formTitle.innerText = "Student Login";
+    };
+    adminBtn.onclick = () => {
+      adminBtn.classList.add("active");
+      studentBtn.classList.remove("active");
+      studentForm.style.display = "none";
+      adminForm.style.display = "block";
+      formTitle.innerText = "Admin Login";
+    };
+  </script>
+</body>
+</html>

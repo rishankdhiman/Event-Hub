@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial;
+      background: #f6f7ff;
+      padding: 40px;
+    }
+    h2 {
+      text-align: center;
+      font-size: 30px;
+      color: #14213D;
+      margin-bottom: 5px;
+    }
+    h3 {
+      text-align: center;
+      font-size: 20px;
+      color: #344055;
+      margin-bottom: 18px;
+    }
+    .actions {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .actions a {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      color: #fff;
+      margin: 0 6px;
+    }
+    .btn-add {
+      background: #14213D;
+    }
+    .btn-view {
+      background: #0077b6;
+    }
+    .btn-add:hover { background: #000; }
+    .btn-view:hover { background: #005f8d; }
+
+    .search {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      display: flex;
+    }
+    .search input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #14213D;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 16px;
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+      text-align: left;
+    }
+    th {
+      background: #14213D;
+      color: white;
+    }
+    tr:hover {
+      background: #f1f4ff;
+    }
+    .logout-btn {
+      margin-top: 25px;
+      display: block;
+      padding: 12px 20px;
+      background: #14213D;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .logout-btn:hover {
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 🔐 SESSION PROTECTION -->
+<script>
+  if (!sessionStorage.getItem("userQID") || sessionStorage.getItem("userType") !== "admin") {
+    window.location.href = "login.html";
+  }
+</script>
+
+<h2>Admin Dashboard</h2>
+<h3 id="adminWelcome">Loading...</h3>
+
+<!-- 🔹 NEW: Event management buttons -->
+<div class="actions">
+  <a href="admin_event_upload.html" class="btn-add">➕ Add Event</a>
+  <a href="events_list_admin.html" class="btn-view">📅 View Events / Registrations</a>
+</div>
+
+<div class="search">
+  <input type="text" id="searchBox" placeholder="Search students by name, QID, email, or branch..." />
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>QID</th>
+      <th>Email</th>
+      <th>Program</th>
+      <th>Branch</th>
+    </tr>
+  </thead>
+  <tbody id="studentTable"></tbody>
+</table>
+
+<button class="logout-btn" onclick="logout()">Logout</button>
+
+<!-- FIREBASE + DATA -->
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  // Load admin info for welcome text
+  const adminQID = sessionStorage.getItem("userQID");
+  const qAdmin = query(collection(db, "admins"), where("qid", "==", adminQID));
+  const adminSnap = await getDocs(qAdmin);
+
+  if (!adminSnap.empty) {
+    const adminData = adminSnap.docs[0].data();
+    document.getElementById("adminWelcome").innerText = `Welcome, ${adminData.name}`;
+  } else {
+    document.getElementById("adminWelcome").innerText = "Welcome, Admin";
+  }
+
+  // Load all students
+  const table = document.getElementById("studentTable");
+  const studentSnap = await getDocs(collection(db, "students"));
+  let students = studentSnap.docs.map(doc => doc.data());
+
+  function render(data) {
+    table.innerHTML = data.map(student => `
+      <tr>
+        <td>${student.name}</td>
+        <td>${student.qid}</td>
+        <td>${student.email}</td>
+        <td>${student.program}</td>
+        <td>${student.branch}</td>
+      </tr>
+    `).join("");
+  }
+
+  render(students);
+
+  // Search filter
+  document.getElementById("searchBox").addEventListener("input", function() {
+    const v = this.value.toLowerCase();
+    const filtered = students.filter(s =>
+      (s.name || "").toLowerCase().includes(v) ||
+      String(s.qid || "").toLowerCase().includes(v) ||
+      (s.email || "").toLowerCase().includes(v) ||
+      (s.branch || "").toLowerCase().includes(v)
+    );
+    render(filtered);
+  });
+</script>
+
+<script>
+  function logout() {
+    sessionStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

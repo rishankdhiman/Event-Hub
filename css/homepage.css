@@ -1,0 +1,346 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background: #e6e6e6;
+}
+
+/* TOP PANEL */
+.top-panel {
+    width: 100%;
+    background: #ffffff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.top-panel .left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Search Bar */
+.search-bar {
+    padding: 8px 15px;
+    width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+}
+
+.top-panel nav a,
+.top-panel .right a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.register-btn {
+    padding: 6px 12px;
+    background: #14213D;
+    color: white !important;
+    border-radius: 6px;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 40px;
+  background: white;
+  border: 1px solid #ccc;
+  width: 150px;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.dropdown-content a {
+  padding: 8px;
+  text-decoration: none;
+  color: #333;
+}
+
+.dropdown-content a:hover {
+  background: #eee;
+}
+
+.dropdown-btn {
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px;
+}
+
+
+/* EVENT CAROUSEL */
+.event-carousel {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  margin-bottom: 10vh;
+}
+
+.cards {
+  position: relative;
+  width: 80%; 
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-card {
+  width: 300px;
+  height: 400px;
+  background: white;
+  border-radius: 12px;
+  top: 10px;
+  overflow: hidden;
+  display: flex;
+}
+
+.fullCard {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 15px;
+  transition: transform 0.6s ease, opacity 0.6s;
+  position: relative;
+  position: absolute;
+}
+
+.eventImg{
+  height: 100%;
+  width: 100%;
+}
+
+.arrow-btn {
+    font-size: 25px;
+    border: 1px solid #14213D ;
+    background: white;
+    border-radius: 70px;
+    color: #14213D;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 100;
+}
+
+.eventTitle {
+    position: absolute;
+    text-align: center;
+    font-size: 28px;
+    color: #14213D;
+    font-weight: 700;
+    z-index: 100;
+    top: 420px;
+    font-family: inter;
+}
+
+.eventRegisterButton{
+  position: absolute;
+  z-index: 100;
+  text-decoration: none;
+  padding: 5px 10px;
+  background: #14213D;
+  color: white;
+  border-radius: 28px;
+  cursor: pointer;
+  top: 350px;
+  left: 210px;
+}
+
+/* WORKSHOPS */
+.workshopsContainer {
+  width: 90%;
+  margin: 40px auto;
+}
+
+.workshopsContainer h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #14213d;
+}
+
+.workshopCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 25px;
+  height: 60vh;            
+  overflow: hidden;
+}
+
+.workspaceContent {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.workspaceContent h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #14213d;
+}
+
+.workspaceContent p {
+  font-size: 17px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.registerToWorkshop {
+  padding: 12px 20px;
+  background: #14213d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
+}
+
+.registerToWorkshop:hover {
+  background: black;
+}
+
+.workshopPoster {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.workshopPoster img {
+  height: 100%;
+  width: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+/* CALENDAR SECTION */
+.calendar-header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.calendar-row {
+  display: flex;
+  gap: 20px;
+  width: 95%;
+  margin: auto;
+}
+
+.calendar-box {
+  background: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  width: 25%;
+  min-height: 320px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.cal-header {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day-name {
+  font-weight: bold;
+  text-align: center;
+  font-size: 13px;
+}
+
+.day {
+  height: 30px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.day:hover {
+  background: #14213D;
+  color: white;
+  cursor: pointer;
+}
+
+.empty {
+  height: 30px;
+}
+
+.cal-btn {
+  background: #14213D;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+
+
+/* ABOUT US */
+.about-section {
+    width: 90%;
+    margin: 50px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.dropdown-btn :hover{
+    text-decoration: underline;
+
+}
+
+.reg-btn{
+    top: 83%;
+    left: 90%;
+    position: absolute;
+    text-decoration: none;
+    border-radius: 20px;
+    border: none;
+    height: 40px;
+    width: 100px;
+}

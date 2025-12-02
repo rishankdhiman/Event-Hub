@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Event Registrations</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial;
+      background: #eef2ff;
+    }
+    .navbar {
+      background: #14213D;
+      padding: 15px 25px;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .back-btn {
+      text-decoration:none;
+      color:white;
+      font-size: 16px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0px 5px 16px rgba(0,0,0,0.15);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+    }
+    table th, table td {
+      border: 1px solid #bbb;
+      padding: 12px;
+      text-align: left;
+      font-size: 15px;
+    }
+    table th {
+      background: #14213D;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  if (!sessionStorage.getItem("userQID") || sessionStorage.getItem("userType") !== "admin") {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="navbar">
+  <a class="back-btn" href="events_list_admin.html">⬅ Back</a>
+  Event Registrations
+</div>
+
+<div class="container">
+  <h2 style="text-align:center; margin-bottom:20px;">Registered Students</h2>
+  <p id="eventTitle" style="text-align:center; font-size:18px; margin-bottom:20px;"></p>
+  <table id="table" style="display:none;">
+    <tr>
+      <th>Name</th>
+      <th>QID</th>
+      <th>Email</th>
+      <th>Program</th>
+      <th>Branch</th>
+    </tr>
+  </table>
+  <p id="noData" style="text-align:center;"></p>
+</div>
+
+<script type="module" src="js/firebase.js"></script>
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get("id");
+
+  // Get event info
+  const eventSnap = await getDoc(doc(db, "events", eventId));
+  document.getElementById("eventTitle").innerText = `${eventSnap.data().title} — ${eventSnap.data().date}`;
+
+  const table = document.getElementById("table");
+  const noData = document.getElementById("noData");
+
+  const q = query(collection(db, "event_registrations"), where("eventId", "==", eventId));
+  const regDocs = await getDocs(q);
+
+  if (regDocs.empty) {
+    noData.innerText = "No students registered for this event yet.";
+  } else {
+    table.style.display = "table";
+    regDocs.forEach(async r => {
+      let studentSnap = await getDocs(query(collection(db, "students"), where("qid", "==", r.data().qid)));
+      let student = studentSnap.docs[0].data();
+
+      table.innerHTML += `
+        <tr>
+          <td>${student.name}</td>
+          <td>${student.qid}</td>
+          <td>${student.email}</td>
+          <td>${student.program}</td>
+          <td>${student.branch}</td>
+        </tr>
+      `;
+    });
+  }
+</script>
+
+</body>
+</html>

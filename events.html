@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial;
+      background: #eef2ff;
+    }
+    .navbar {
+      background: #14213D;
+      padding: 15px 25px;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .event-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 5px 18px rgba(0,0,0,0.15);
+      overflow: hidden;
+      transition: 0.25s;
+    }
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 22px rgba(0,0,0,0.22);
+    }
+    .event-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .details {
+      padding: 18px;
+    }
+    h3 {
+      font-size: 20px;
+      color: #14213D;
+      margin-bottom: 6px;
+    }
+    p {
+      margin: 3px 0;
+      font-size: 15px;
+      color: #333;
+      opacity: 0.9;
+    }
+    .view-btn {
+      margin-top: 12px;
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background: #14213D;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: 0.25s;
+    }
+    .view-btn:hover {
+      background: black;
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">Events</div>
+
+<div class="container">
+  <div class="grid" id="eventGrid">
+    <p style="text-align:center; width:100%;">Loading events...</p>
+  </div>
+</div>
+
+<script type="module" src="/js/firebase.js"></script>
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const eventGrid = document.getElementById("eventGrid");
+  eventGrid.innerHTML = "<p style='text-align:center;width:100%'>Loading...</p>";
+
+  const q = query(collection(db, "events"), orderBy("timestamp", "desc"));
+  const data = await getDocs(q);
+
+  eventGrid.innerHTML = "";
+
+  data.forEach(doc => {
+    const event = doc.data();
+    const card = `
+      <div class="event-card">
+        <img src="${event.posterUrl}" alt="Poster">
+        <div class="details">
+          <h3>${event.title}</h3>
+          <p><strong>Date:</strong> ${event.date}</p>
+          <p><strong>Venue:</strong> ${event.venue}</p>
+          <a class="view-btn" href="event_details.html?id=${doc.id}">View Details</a>
+        </div>
+      </div>
+    `;
+    eventGrid.innerHTML += card;
+  });
+
+  if (!data.size) {
+    eventGrid.innerHTML = "<p style='text-align:center;width:100%'>No events posted yet.</p>";
+  }
+</script>
+
+</body>
+</html>

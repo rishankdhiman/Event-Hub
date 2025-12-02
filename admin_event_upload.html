@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Event</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Inter, Arial;
+        background: #f6f7ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .card {
+        background: white;
+        width: 420px;
+        padding: 28px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 15px;
+        color: #14213d;
+      }
+      .form-group {
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #14213d;
+      }
+      input,
+      textarea {
+        padding: 12px;
+        font-size: 15px;
+        border-radius: 8px;
+        border: 1.6px solid #14213d;
+        outline: none;
+      }
+      textarea {
+        height: 100px;
+        resize: none;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background: #14213d;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      button:hover {
+        background: #000;
+      }
+
+      /* SUCCESS SCREEN */
+      .success-box {
+        display: none;
+        text-align: center;
+      }
+      .success-box h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+        color: #14213d;
+      }
+      .success-box p {
+        font-size: 16px;
+        color: #444;
+        margin-bottom: 18px;
+      }
+      .back-btn {
+        background: #0077b6;
+      }
+      .back-btn:hover {
+        background: #005f8d;
+      }
+      #msg {
+        text-align: center;
+        margin-bottom: 10px;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card" id="formCard">
+      <h2>Add New Event</h2>
+      <p id="msg"></p>
+
+      <form id="eventForm">
+        <div class="form-group">
+          <label>Event Title</label>
+          <input type="text" id="title" required />
+        </div>
+
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="date" required />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Event Image</label>
+          <input type="file" id="image" accept="image/*" required />
+        </div>
+
+        <button type="submit" id="uploadBtn">Upload Event</button>
+      </form>
+    </div>
+
+    <div class="success-box" id="successBox">
+      <h1>Done 🎉</h1>
+      <p>Event uploaded successfully!</p>
+      <button
+        class="back-btn"
+        onclick="window.location.href='admin_dashboard.html'"
+      >
+        Return to Dashboard
+      </button>
+    </div>
+    <script type="module">
+      import { db } from "/js/firebase.js";
+      import {
+        doc,
+        collection,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+      const form = document.getElementById("eventForm");
+      const msg = document.getElementById("msg");
+
+      // --- Upload image to ImgBB ---
+      async function uploadToImgBB(file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const apiKey = "a7ec381359cdc2b874f1f8a6095c79b5"; // ImgBB key
+
+        const res = await fetch(
+          `https://api.imgbb.com/1/upload?key=${apiKey}`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error("ImgBB Upload Failed");
+        }
+
+        return data.data.url; // direct link
+      }
+
+      // --- Submit Form ---
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const uploadBtn = document.getElementById("uploadBtn");
+        uploadBtn.disabled = true;
+        uploadBtn.innerText = "Uploading...";
+
+        const title = document.getElementById("title").value;
+        const date = document.getElementById("date").value;
+        const description = document.getElementById("description").value;
+        const imageFile = document.getElementById("image").files[0];
+
+        if (!title || !date || !description || !imageFile) {
+          msg.innerText = "Please fill all fields";
+          msg.style.color = "red";
+          uploadBtn.disabled = false;
+          uploadBtn.innerText = "Upload Event";
+          return;
+        }
+
+        try {
+          // image to ImgBB
+          const imageURL = await uploadToImgBB(imageFile);
+
+          //Firestore Auto-ID
+          const eventRef = doc(collection(db, "eventDetails"));
+          const eventID = eventRef.id; 
+
+          await setDoc(eventRef, {
+            eventID: eventID,
+            title,
+            date: new Date(date),
+            description,
+            poster: imageURL,
+            createdAt: new Date(),
+          });
+
+          // 4. Show success screen
+          document.getElementById("formCard").style.display = "none";
+          document.getElementById("successBox").style.display = "block";
+        } catch (err) {
+          msg.innerText = "Upload failed! Try again.";
+          msg.style.color = "red";
+          uploadBtn.disabled = false;
+          uploadBtn.innerText = "Upload Event";
+        }
+      });
+    </script>
+  </body>
+</html>

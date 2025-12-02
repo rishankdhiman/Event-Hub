@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Event - Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial;
+      background: #eef2ff;
+    }
+    .navbar {
+      background: #14213D;
+      padding: 15px 25px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .logout-btn {
+      background: #e63946;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .container {
+      max-width: 650px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px 28px;
+      border-radius: 12px;
+      box-shadow: 0px 5px 18px rgba(0,0,0,0.17);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label { font-size: 16px; font-weight: 600; }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid gray;
+      margin-top: 4px;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      background: #14213D;
+      padding: 14px;
+      border: none;
+      color: white;
+      font-size: 18px;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  if (!sessionStorage.getItem("userQID") || sessionStorage.getItem("userType") !== "admin") {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="navbar">
+  Upload Event – Admin
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+  <div class="form-group">
+    <label>Event Title</label>
+    <input type="text" id="title" required />
+  </div>
+  <div class="form-group">
+    <label>Date</label>
+    <input type="date" id="date" required />
+  </div>
+  <div class="form-group">
+    <label>Venue</label>
+    <input type="text" id="venue" required />
+  </div>
+  <div class="form-group">
+    <label>Max Seats</label>
+    <input type="number" id="maxSeats" placeholder="Example: 100" required />
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <textarea id="description" rows="4" required></textarea>
+  </div>
+  <div class="form-group">
+    <label>Event Poster</label>
+    <input type="file" id="poster" accept="image/*" required />
+  </div>
+  <button id="uploadBtn">Upload Event</button>
+  <p id="msg" style="text-align:center; margin-top:10px;"></p>
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { db } from "./js/firebase.js";
+  import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+
+  const storage = getStorage();
+  uploadBtn.onclick = async () => {
+    const title = document.getElementById("title").value;
+    const date = document.getElementById("date").value;
+    const venue = document.getElementById("venue").value;
+    const description = document.getElementById("description").value;
+    const maxSeats = Number(document.getElementById("maxSeats").value);
+    const file = poster.files[0];
+
+    if (!file) return;
+
+    msg.innerText = "Uploading...";
+    const imgRef = ref(storage, `event_posters/${Date.now()}_${file.name}`);
+    await uploadBytes(imgRef, file);
+    const url = await getDownloadURL(imgRef);
+
+    await addDoc(collection(db, "events"), {
+      title, date, venue, description,
+      posterUrl: url,
+      maxSeats,
+      registeredCount: 0,
+      timestamp: new Date()
+    });
+
+    msg.innerText = "Event posted successfully 🎉";
+  };
+</script>
+
+<script>
+  function logout() {
+    sessionStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+</html>

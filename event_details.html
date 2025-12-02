@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Details</title>
+  <style>
+    body { margin: 0; font-family: Inter, Arial; background: #eef2ff; }
+    .navbar { background: #14213D; padding: 14px 22px; color: white; font-size: 20px; font-weight: 700; cursor: pointer; }
+    .container { max-width: 900px; margin: 30px auto; background:white; padding:24px; border-radius:12px; box-shadow:0px 6px 20px rgba(0,0,0,0.2); }
+    .poster { width:100%; border-radius:10px; max-height:410px; object-fit:cover; }
+    h1 { font-size:30px; margin:16px 0; color:#14213D; }
+    .register-btn { margin-top:18px; width:100%; padding:15px; background:#14213D; color:white; border:none; border-radius:6px; font-size:18px; font-weight:700; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<div class="navbar" onclick="history.back()">⬅ Back to Events</div>
+
+<div class="container">
+  <img id="poster" class="poster" />
+  <h1 id="title"></h1>
+  <p><strong>Date:</strong> <span id="date"></span></p>
+  <p><strong>Venue:</strong> <span id="venue"></span></p>
+  <p style="margin-top:10px;"><strong>Description:</strong></p>
+  <p id="description"></p>
+  <button class="register-btn" id="regBtn">Register</button>
+  <p id="msg" style="text-align:center;"></p>
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { db } from "./firebase.js";
+  import { collection, doc, getDoc, addDoc, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const id = new URLSearchParams(location.search).get("id");
+  const qid = sessionStorage.getItem("userQID");
+
+  const snap = await getDoc(doc(db, "events", id));
+  const event = snap.data();
+
+  title.innerText = event.title;
+  poster.src = event.posterUrl;
+  date.innerText = event.date;
+  venue.innerText = event.venue;
+  description.innerText = event.description;
+
+  const q = query(collection(db, "event_registrations"), where("eventId", "==", id), where("qid", "==", qid));
+  const exists = await getDocs(q);
+  if (!exists.empty) {
+    regBtn.innerText = "Already Registered ✓";
+    regBtn.disabled = true;
+    regBtn.style.background = "gray";
+  }
+
+  regBtn.onclick = async () => {
+    regBtn.disabled = true;
+    regBtn.innerText = "Please wait...";
+
+    const fresh = await getDoc(doc(db, "events", id));
+    const current = fresh.data();
+
+    if (current.registeredCount >= current.maxSeats) {
+      msg.innerText = "Event is full ❌";
+      msg.style.color = "red";
+      regBtn.innerText = "Event Full";
+      regBtn.style.background = "gray";
+      return;
+    }
+
+    await addDoc(collection(db, "event_registrations"), {
+      eventId: id,
+      qid,
+      timestamp: new Date()
+    });
+
+    await updateDoc(doc(db, "events", id), {
+      registeredCount: current.registeredCount + 1
+    });
+
+    msg.innerText = "Registered Successfully 🎉";
+    msg.style.color = "green";
+    regBtn.innerText = "Registered ✓";
+    regBtn.style.background = "gray";
+  };
+</script>
+
+</body>
+</html>

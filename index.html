@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Dashboard</title>
+    <link rel="stylesheet" href="/css/homepage.css" />
+
+    <!--inter font import-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- font awesome cdn link-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.css"
+      integrity="sha512-NhLySQDkiKSKnT+R795uaHWRQ7D3VuIvgeOLCK8cWq4w5fq4sWF90gj8eURpTqn/f1mFzqClpOz8JPlgVTLfFw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <!-- TOP PANEL -->
+    <header class="top-panel">
+      <div class="left">
+        <div class="logo">Event Hub</div>
+
+        <!-- SEARCH BAR -->
+        <input type="text" placeholder="Search events..." class="search-bar" />
+
+        <nav>
+          <div id="eventDropDown" class="dropdown-btn">Events</div>
+          <a href="#" id="createEvent">Create Event</a>
+        </nav>
+      </div>
+
+      <div class="right">
+        <a id="loginBtn" href="login.html">Login</a>
+        <a id="registerBtn" href="register.html" class="register-btn"
+          >Register</a
+        >
+
+        <!-- Dashboard Icon (hidden until user logs in) -->
+        <a
+          id="dashboardBtn"
+          href="student_dashboard.html"
+          style="display: none"
+        >
+          <i class="fa-solid fa-desktop"></i>
+        </a>
+        <i class="fa-solid fa-user" id="userIcon" style="display: none"></i>
+      </div>
+    </header>
+
+    <!-- EVENT CAROUSEL -->
+    <section class="event-carousel">
+      <button class="arrow-btn"><i class="fa-solid fa-angle-left"></i></button>
+      <div class="cards">
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle">hello</h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+        <div class="fullCard">
+          <div class="event-card"><img class="eventImg" /></div>
+          <a class="eventRegisterButton" href="">Register</a>
+          <h2 class="eventTitle"></h2>
+        </div>
+      </div>
+      <button class="arrow-btn"><i class="fa-solid fa-angle-right"></i></button>
+    </section>
+
+    <!-- WORKSHOPS SECTION -->
+
+    <div class="workshopsContainer">
+      <h2>Workshops</h2>
+
+      <!-- Workshop Card 2 -->
+      <div class="workshopCard">
+        <div class="workspaceContent">
+          <h3 class="workspaceTitle">Business Talk Show</h3>
+          <p class="workspaceAbout">
+            A high-energy talk-show-style workshop where industry professionals
+            share unfiltered insights about startup struggles, scaling
+            strategies, and leadership challenges. Participants experience live
+            Q&A, rapid-fire sessions, and collaborative business thinking.
+          </p>
+          <button class="registerToWorkshop">Register</button>
+        </div>
+
+        <div class="workshopPoster">
+          <img
+            src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/business-talkshow-program-design-template-90cc2b14ddf685f18a45c4962ac4e9cf_screen.jpg?ts=1708776736"
+            alt=""
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENT CALENDAR -->
+    <section class="event-calendar">
+      <div class="calendar-header-main">
+        <button id="prev4" class="cal-btn">&#10094;</button>
+        <h2>Event Calendar</h2>
+        <button id="next4" class="cal-btn">&#10095;</button>
+      </div>
+
+      <div class="calendar-row" id="calendarRow"></div>
+    </section>
+
+    <!-- ABOUT US -->
+    <section class="about-section">
+      <h2>ABOUT US</h2>
+      <p>
+        Event Hub is a student-driven platform that connects learners with
+        curated events, workshops, and opportunities across every domain. Our
+        goal is to make discovering, registering, and participating in events
+        easier, faster, and more meaningful. Whether it's tech seminars,
+        cultural fests, hackathons, or skill-building workshops, we bring
+        everything to one place — helping students explore, grow, and stay one
+        step ahead.
+      </p>
+    </section>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        limit,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD9ovouBcLsbTAHSfasHaOohkRvbUtX7Vc",
+        authDomain: "calander-32da1.firebaseapp.com",
+        projectId: "calander-32da1",
+        storageBucket: "calander-32da1.firebasestorage.app",
+        messagingSenderId: "936099568870",
+        appId: "1:936099568870:web:edf5be725a3d1dfbb7af27",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      async function loadRecentEvents() {
+        const cards = document.querySelectorAll(".event-card");
+        const titles = document.querySelectorAll(".eventTitle");
+        const regLinks = document.querySelectorAll(".eventRegisterButton");
+
+        window.carouselData = [];
+
+        const q = query(
+          collection(db, "eventDetails"),
+          orderBy("date", "desc"),
+          limit(7)
+        );
+
+        const snapshot = await getDocs(q);
+        let index = 0;
+
+        snapshot.forEach((doc) => {
+          const event = doc.data();
+          const eventID = doc.id;
+
+          const title = event.title;
+          const poster = event.poster.replace(/^\/+/, "");
+
+          carouselData.push({
+            id: eventID,
+            title: title,
+            poster: poster,
+          });
+
+          cards[index].querySelector("img").src = poster;
+
+          titles[index].innerText = title;
+
+          regLinks[index].setAttribute("href", eventID);
+
+          index++;
+        });
+
+        console.log("Loaded Carousel Data:", carouselData);
+      }
+
+      loadRecentEvents();
+    </script>
+
+    <script>
+      const cards = document.querySelectorAll(".fullCard");
+      const regButton = document.querySelectorAll(".eventRegisterButton");
+      const eventTitle = document.querySelectorAll(".eventTitle");
+      const carousel = document.querySelector(".event-carousel");
+      const nextBtn = document.querySelector(".fa-angle-right");
+      const prevBtn = document.querySelector(".fa-angle-left");
+
+      let index = 0;
+      let autoSlide;
+
+      function setPositions() {
+        const cardWidth = cards[0].offsetWidth; // IMPORTANT FIX
+
+        cards.forEach((card, i) => {
+          const pos = (i - index + cards.length) % cards.length;
+
+          // hide everything by default
+          regButton[i].style.display = "none";
+          eventTitle[i].style.display = "none";
+
+          if (pos === 2) {
+            // CENTER CARD — ONLY THIS SHOWS CONTENT
+            card.style.transform = `translateX(0px) scale(1.2)`;
+            card.style.opacity = "1";
+            card.style.zIndex = "10";
+
+            regButton[i].style.display = "inline-block";
+            eventTitle[i].style.display = "inline-block";
+          } else if (pos === 1) {
+            // LEFT
+            card.style.transform = `translateX(${-cardWidth}px) scale(0.85)`;
+            card.style.opacity = "0.7";
+            card.style.zIndex = "6";
+          } else if (pos === 3) {
+            // RIGHT
+            card.style.transform = `translateX(${cardWidth}px) scale(0.85)`;
+            card.style.opacity = "0.7";
+            card.style.zIndex = "6";
+          } else if (pos === 0) {
+            // FAR LEFT
+            card.style.transform = `translateX(${-2 * cardWidth}px) scale(0.7)`;
+            card.style.opacity = "0.4";
+            card.style.zIndex = "3";
+          } else if (pos === 4) {
+            // FAR RIGHT
+            card.style.transform = `translateX(${2 * cardWidth}px) scale(0.7)`;
+            card.style.opacity = "0.4";
+            card.style.zIndex = "3";
+          } else {
+            // BACK CARDS
+            card.style.transform = `scale(0.5) translateY(40px)`;
+            card.style.opacity = "0";
+            card.style.zIndex = "1";
+          }
+        });
+      }
+
+      setPositions();
+
+      // ---- AUTO PLAY ----
+      function startAutoSlide() {
+        autoSlide = setInterval(() => {
+          index = (index + 1) % cards.length;
+          setPositions();
+        }, 5000);
+      }
+
+      function stopAutoSlide() {
+        clearInterval(autoSlide);
+      }
+
+      startAutoSlide();
+
+      // ---- FORWARD BUTTON (→) ----
+      nextBtn.addEventListener("click", () => {
+        stopAutoSlide();
+        index = (index + 1) % cards.length;
+        setPositions();
+        startAutoSlide();
+      });
+
+      // ---- BACK BUTTON (←) ----
+      prevBtn.addEventListener("click", () => {
+        stopAutoSlide();
+        index = (index - 1 + cards.length) % cards.length;
+        setPositions();
+        startAutoSlide();
+      });
+    </script>
+
+    <script>
+      const eventDropDown = document.getElementById("eventDropDown");
+
+      // Create dropdown div once
+      const dropdownDiv = document.createElement("div");
+      dropdownDiv.className = "dropdown-content";
+
+      dropdownDiv.innerHTML = `
+    <a href="#">Tech Events</a>
+    <a href="#">Workshops</a>
+    <a href="#">Seminars</a>
+  `;
+
+      document.body.appendChild(dropdownDiv);
+
+      // Show dropdown on hover
+      eventDropDown.addEventListener("mouseenter", () => {
+        const rect = eventDropDown.getBoundingClientRect(); // position menu under button
+
+        dropdownDiv.style.left = rect.left + "px";
+        dropdownDiv.style.top = rect.bottom + "px";
+
+        dropdownDiv.style.display = "flex";
+      });
+
+      // Hide dropdown when mouse leaves both button & dropdown
+      eventDropDown.addEventListener("mouseleave", () => {
+        setTimeout(() => {
+          if (!dropdownDiv.matches(":hover")) {
+            dropdownDiv.style.display = "none";
+          }
+        }, 50);
+      });
+
+      dropdownDiv.addEventListener("mouseleave", () => {
+        dropdownDiv.style.display = "none";
+      });
+    </script>
+
+    <script>
+      const calendarRow = document.getElementById("calendarRow");
+
+      let startDate = new Date(); // first month shown
+
+      function renderFourMonths() {
+        calendarRow.innerHTML = ""; // clear
+
+        for (let m = 0; m < 4; m++) {
+          const date = new Date(
+            startDate.getFullYear(),
+            startDate.getMonth() + m,
+            1
+          );
+
+          const year = date.getFullYear();
+          const month = date.getMonth();
+
+          const firstDay = new Date(year, month, 1).getDay();
+          const lastDate = new Date(year, month + 1, 0).getDate();
+
+          const monthNames = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+
+          // Create calendar box
+          const box = document.createElement("div");
+          box.className = "calendar-box";
+
+          box.innerHTML = `
+      <div class="cal-header">${monthNames[month]} ${year}</div>
+      <div class="cal-grid">
+        <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div>
+        <div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+        </div>
+        `;
+
+          const grid = document.createElement("div");
+          grid.className = "cal-grid";
+
+          // Day names already added — now add empty spaces
+          for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            grid.appendChild(empty);
+          }
+
+          // Add days
+          for (let d = 1; d <= lastDate; d++) {
+            const dayDiv = document.createElement("div");
+            dayDiv.className = "day";
+            dayDiv.textContent = d;
+            grid.appendChild(dayDiv);
+          }
+
+          box.appendChild(grid);
+          calendarRow.appendChild(box);
+        }
+      }
+
+      renderFourMonths();
+
+      // Next 4 months
+      document.getElementById("next4").addEventListener("click", () => {
+        startDate.setMonth(startDate.getMonth() + 4);
+        renderFourMonths();
+      });
+
+      // Previous 4 months
+      document.getElementById("prev4").addEventListener("click", () => {
+        startDate.setMonth(startDate.getMonth() - 4);
+        renderFourMonths();
+      });
+    </script>
+
+    <script>
+      const userType = sessionStorage.getItem("userType");
+      const userIcon = document.getElementById("userIcon");
+      const loginBtn = document.querySelector("a[href='login.html']");
+      const registerBtn = document.querySelector(".register-btn");
+      const dashboardBtn = document.getElementById("dashboardBtn");
+
+      if (userType === "student") {
+        // STUDENT LOGGED IN
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "none";
+        dashboardBtn.style.display = "inline-block";
+        userIcon.style.display = "inline-block";
+
+        // Link to student dashboard
+        dashboardBtn.href = "student_dashboard.html";
+      } else if (userType === "admin") {
+        // ADMIN LOGGED IN
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "none";
+        dashboardBtn.style.display = "inline-block";
+        userIcon.style.display = "inline-block";
+
+        // Link to admin dashboard
+        dashboardBtn.href = "admin_dashboard.html";
+      } else {
+        // NO USER LOGGED IN
+        loginBtn.style.display = "inline-block";
+        registerBtn.style.display = "inline-block";
+        dashboardBtn.style.display = "none";
+      }
+    </script>
+
+    <script type="module">
+      import { db } from "./js/firebase.js";
+      import {
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+      } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+      const registerButtons = document.querySelectorAll(".eventRegisterButton");
+
+      registerButtons.forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const eventID = btn.getAttribute("href");
+
+          const userType = sessionStorage.getItem("userType");
+          const studentQID = sessionStorage.getItem("userQID");
+
+          if (!userType || !studentQID) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          if (userType !== "student") {
+            alert("Only students can register for events.");
+            return;
+          }
+
+          await registerStudent(eventID, studentQID);
+        });
+      });
+
+      async function registerStudent(eventID, studentQID) {
+        const eventRef = doc(db, "eventRegistrations", eventID);
+        const eventSnap = await getDoc(eventRef);
+
+        if (!eventSnap.exists()) {
+          await setDoc(eventRef, {
+            [studentQID]: true,
+          });
+
+          alert("Registered Successfull");
+          return;
+        }
+
+        const data = eventSnap.data();
+
+        if (data[studentQID]) {
+          alert("You are already registered for this event.");
+          return;
+        }
+
+        await updateDoc(eventRef, {
+          [studentQID]: true,
+        });
+
+        alert("Registered Successfully");
+      }
+    </script>
+  </body>
+</html>

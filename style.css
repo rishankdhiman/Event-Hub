@@ -1,0 +1,153 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: Inter, system-ui, Arial;
+  color: #14213D;       /* Navy text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: url('/assets/images/loginBackground.jpg') no-repeat center;
+  background-size: cover;
+
+}
+
+/* MAIN CONTAINER */
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;  
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  background-color: rgb(255, 255, 255 , 0.9);
+  backdrop-filter: blur(100px);
+}
+
+/* USER TYPE BUTTONS */
+.userType {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.type-btn {
+  background: #FFFFFF;              /* White */
+  border: 2px solid #14213D;        /* Navy border */
+  color: #14213D;                   /* Navy text */
+  padding: 10px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 700;                 /* Bold text */
+  transition: 0.25s ease;
+}
+
+.type-btn:hover {
+  background: #14213D;              /* Fill navy */
+  color: #FFFFFF;                   /* White text */
+}
+
+.type-btn.active {
+  background: #14213D;              /* Solid navy */
+  color: #FFFFFF;
+  border-color: #14213D;
+}
+
+/* FORM CARD */
+.form-card {
+  background-color: transparent;
+  border-radius: 14px;
+}
+
+.form-card h1 {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #14213D;              /* Navy title */
+  font-weight: 800;
+}
+
+/* FORM FIELDS */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  color: #14213D;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  background: #FFFFFF;
+  color: #14213D;
+  border: 1.6px solid #14213D;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #000000;                 /* Black focus */
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #14213D;                  /* Full navy */
+  border: none;
+  border-radius: 10px;
+  color: #FFFFFF;                       /* White text */
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.submit-btn:hover {
+  background: #000000;                  /* Black hover */
+  color: #FFFFFF;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+
+/* ERROR TEXT */
+.error {
+  height: 14px;
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .container {
+    padding: 14px;
+  }
+  .form-card {
+    padding: 18px;
+  }
+}
+
+/* Remove number input arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
