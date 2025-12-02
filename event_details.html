@@ -28,9 +28,9 @@
   <p id="msg" style="text-align:center;"></p>
 </div>
 
-<script type="module" src="firebase.js"></script>
+<script type="module" src="./js/firebase.js"></script>
 <script type="module">
-  import { db } from "js/firebase.js";
+  import { db } from "./js/firebase.js";
   import { collection, doc, getDoc, addDoc, updateDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const id = new URLSearchParams(location.search).get("id");
@@ -87,4 +87,5 @@
 
 </body>
 </html>
+
 
