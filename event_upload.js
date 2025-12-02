@@ -1,4 +1,4 @@
-import { db } from "js/firebase.js";
+import { db } from "./js/firebase.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 // --- UPLOAD IMAGE TO IMGBB ---
@@ -75,4 +75,5 @@ document.getElementById("uploadBtn").addEventListener("click", async () => {
     msg.style.color = "red";
   }
 });
+
 
