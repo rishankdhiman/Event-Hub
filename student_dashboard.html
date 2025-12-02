@@ -147,11 +147,11 @@
 </div>
 
 <!-- FIREBASE -->
-<script type="module" src="js/firebase.js"></script>
+<script type="module" src="./js/firebase.js"></script>
 
 <!-- LOAD STUDENT INFO -->
 <script type="module">
-  import { db } from "js/firebase.js";
+  import { db } from "./js/firebase.js";
   import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const qid = sessionStorage.getItem("userQID");
@@ -248,5 +248,6 @@
 
 </body>
 </html>
+
 
 
