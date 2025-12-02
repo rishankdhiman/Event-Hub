@@ -151,7 +151,7 @@
 
 <!-- LOAD STUDENT INFO -->
 <script type="module">
-  import { db } from "./js/firebase.js";
+  import { db } from "js/firebase.js";
   import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const qid = sessionStorage.getItem("userQID");
@@ -174,7 +174,7 @@
 
 <!-- CHANGE PASSWORD -->
 <script type="module">
-  import { db } from "./firebase.js";
+  import { db } from "js/firebase.js";
   import { collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   updatePassBtn.onclick = async () => {
@@ -213,7 +213,7 @@
 
 <!-- REGISTERED EVENTS -->
 <script type="module">
-  import { db } from "./firebase.js";
+  import { db } from "js/firebase.js";
   import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const qid = sessionStorage.getItem("userQID");
@@ -248,3 +248,4 @@
 
 </body>
 </html>
+
