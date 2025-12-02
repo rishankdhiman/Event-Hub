@@ -84,9 +84,9 @@
   </div>
 </div>
 
-<script type="module" src="/js/firebase.js"></script>
+<script type="module" src="js/firebase.js"></script>
 <script type="module">
-  import { db } from "./firebase.js";
+  import { db } from "js/firebase.js";
   import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const eventGrid = document.getElementById("eventGrid");
@@ -120,3 +120,4 @@
 
 </body>
 </html>
+
