@@ -80,30 +80,41 @@
   <div id="eventList"><p style="text-align:center;">Loading events...</p></div>
 </div>
 
-<script type="module" src="./js/firebase.js"></script>
 <script type="module">
   import { db } from "./js/firebase.js";
-  import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import { 
+    collection, 
+    getDocs, 
+    orderBy, 
+    query 
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const listDiv = document.getElementById("eventList");
   listDiv.innerHTML = "<p style='text-align:center;'>Loading...</p>";
 
-  const q = query(collection(db, "events"), orderBy("timestamp", "desc"));
+  // FIXED: Correct collection name
+  const q = query(collection(db, "eventDetails"), orderBy("createdAt", "desc"));
   const data = await getDocs(q);
 
   listDiv.innerHTML = "";
+
   if (data.empty) {
     listDiv.innerHTML = "<p style='text-align:center;'>No events found.</p>";
   }
 
   data.forEach(doc => {
     const event = doc.data();
+
+    const dateString = event.date ? new Date(event.date).toDateString() : "N/A";
+
     listDiv.innerHTML += `
       <div class="event-card">
         <h3>${event.title}</h3>
-        <p><strong>Date:</strong> ${event.date}</p>
-        <p><strong>Venue:</strong> ${event.venue}</p>
-        <a class="view-btn" href="admin_view_registrations.html?id=${doc.id}">View Registrations</a>
+        <p><strong>Date:</strong> ${dateString}</p>
+        <p><strong>Venue:</strong> ${event.venue || "Not provided"}</p>
+        <a class="view-btn" href="admin_view_registrations.html?id=${doc.id}">
+          View Registrations
+        </a>
       </div>
     `;
   });
@@ -118,5 +129,3 @@
 
 </body>
 </html>
-
-
