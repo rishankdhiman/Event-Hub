@@ -78,9 +78,9 @@
   <p id="noData" style="text-align:center;"></p>
 </div>
 
-<script type="module" src="js/firebase.js"></script>
+<script type="module" src="./js/firebase.js"></script>
 <script type="module">
-  import { db } from "js/firebase.js";
+  import { db } from "./js/firebase.js";
   import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
   const params = new URLSearchParams(window.location.search);
@@ -119,4 +119,5 @@
 
 </body>
 </html>
+
 
