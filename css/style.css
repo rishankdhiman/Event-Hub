@@ -21,7 +21,6 @@
 .left {
   width: 40%;
   height: 90%;
-  
 }
 
 .left img {
@@ -31,16 +30,18 @@
   border-radius: 20px 0px 0px 20px;
 }
 
-/* RIGHT SIDE */
+/* RIGHT SIDE FORM */
 .right {
   width: 40%;
   height: 90%;
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 40px;
   border-radius: 0px 20px 20px 0px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 /* TOGGLE BUTTONS */
@@ -59,7 +60,7 @@
   color: #14213D;
   font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s ease;
 }
 
 .type-btn.active,
@@ -93,20 +94,27 @@
 .form-group label {
   margin-bottom: 6px;
   color: #14213D;
+  font-weight: 600;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   padding: 12px;
   border: 1.6px solid #14213D;
   border-radius: 8px;
+  background: #ffffff;
+  color: #14213D;
+  transition: 0.25s ease;
 }
 
-.form-group input:focus {
-  border-color: black;
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #000;
   outline: none;
+  box-shadow: 0 0 7px rgba(0,0,0,0.25);
 }
 
-/* BUTTON */
+/* SUBMIT BUTTON */
 .submit-btn {
   width: 100%;
   padding: 14px;
@@ -117,9 +125,40 @@
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: .25s;
+  transition: 0.25s ease;
 }
 
 .submit-btn:hover {
   background: black;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+
+/* REMOVE NUMBER ARROWS */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .main {
+    flex-direction: column;
+    padding: 20px;
+    height: auto;
+  }
+
+  .left, .right {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+  }
+
+  .left img {
+    border-radius: 20px;
+    height: 250px;
+  }
 }
