@@ -1,55 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin – Event Registrations</title>
+
   <style>
-    body {
-      margin: 0;
-      font-family: Inter, Arial;
-      background: #eef2ff;
-    }
-    .navbar {
-      background: #14213D;
-      padding: 15px 25px;
-      color: white;
-      font-size: 20px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .back-btn {
-      text-decoration:none;
-      color:white;
-      font-size: 16px;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0px 5px 16px rgba(0,0,0,0.15);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 18px;
-    }
-    table th, table td {
-      border: 1px solid #bbb;
-      padding: 12px;
-      text-align: left;
-      font-size: 15px;
-    }
-    table th {
-      background: #14213D;
-      color: white;
-    }
+    body { margin:0; font-family:Inter,Arial; background:#eef2ff; color:#222; }
+    .navbar { background:#14213D; padding:16px 24px; color:#fff; display:flex; justify-content:space-between; align-items:center; font-weight:700; }
+    .back-btn { color:#fff; text-decoration:none; background:rgba(255,255,255,0.12); padding:8px 12px; border-radius:8px; }
+    .container { max-width:1000px; margin:32px auto; padding:0 16px; }
+    .event-card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.08); margin-bottom:18px; text-align:center; }
+    #poster { width:100%; max-height:340px; object-fit:cover; border-radius:10px; display:none; margin-bottom:12px; }
+    .event-title { font-size:26px; color:#14213D; font-weight:800; margin-bottom:6px; }
+    .event-date { color:#555; margin-bottom:8px; }
+    .stats-box { background:#14213D; color:#fff; padding:12px 16px; border-radius:10px; font-weight:700; text-align:center; margin-bottom:18px; }
+    .table-wrap { overflow:auto; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:12px 14px; border-bottom:1px solid #eee; text-align:left; font-size:15px; }
+    th { background:#14213D; color:#fff; position:sticky; top:0; }
+    tr:nth-child(even){ background:#fbfdff; }
+    tr:hover { background:#e9f0ff; }
+    #noData, #errorMsg { text-align:center; color:#444; margin-top:18px; }
+    .loading { text-align:center; padding:18px; color:#666; }
   </style>
 </head>
+
 <body>
 
 <script>
@@ -59,65 +35,144 @@
 </script>
 
 <div class="navbar">
+  <div>Event Registrations</div>
   <a class="back-btn" href="events_list_admin.html">⬅ Back</a>
-  Event Registrations
 </div>
 
 <div class="container">
-  <h2 style="text-align:center; margin-bottom:20px;">Registered Students</h2>
-  <p id="eventTitle" style="text-align:center; font-size:18px; margin-bottom:20px;"></p>
-  <table id="table" style="display:none;">
-    <tr>
-      <th>Name</th>
-      <th>QID</th>
-      <th>Email</th>
-      <th>Program</th>
-      <th>Branch</th>
-    </tr>
-  </table>
-  <p id="noData" style="text-align:center;"></p>
+  <div id="loading" class="loading">Loading event & registrations…</div>
+
+  <div id="eventArea" style="display:none;">
+    <div class="event-card">
+      <img id="poster" alt="Event poster">
+      <div class="event-title" id="eventTitle">—</div>
+      <div class="event-date" id="eventDate">—</div>
+      <div class="small" id="eventVenue"></div>
+    </div>
+
+    <div id="statsBox" class="stats-box">—</div>
+
+    <div class="table-wrap">
+      <table id="table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>QID</th>
+            <th>Email</th>
+            <th>Program</th>
+            <th>Branch</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <p id="noData"></p>
+      <p id="errorMsg"></p>
+    </div>
+  </div>
 </div>
 
-<script type="module" src="./js/firebase.js"></script>
 <script type="module">
   import { db } from "./js/firebase.js";
-  import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  import {
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-  const params = new URLSearchParams(window.location.search);
-  const eventId = params.get("id");
-
-  // Get event info
-  const eventSnap = await getDoc(doc(db, "events", eventId));
-  document.getElementById("eventTitle").innerText = `${eventSnap.data().title} — ${eventSnap.data().date}`;
-
+  const loading = document.getElementById("loading");
+  const eventArea = document.getElementById("eventArea");
   const table = document.getElementById("table");
+  const tableBody = document.getElementById("tableBody");
   const noData = document.getElementById("noData");
+  const errorMsg = document.getElementById("errorMsg");
 
-  const q = query(collection(db, "event_registrations"), where("eventId", "==", eventId));
-  const regDocs = await getDocs(q);
-
-  if (regDocs.empty) {
-    noData.innerText = "No students registered for this event yet.";
-  } else {
-    table.style.display = "table";
-    regDocs.forEach(async r => {
-      let studentSnap = await getDocs(query(collection(db, "students"), where("qid", "==", r.data().qid)));
-      let student = studentSnap.docs[0].data();
-
-      table.innerHTML += `
-        <tr>
-          <td>${student.name}</td>
-          <td>${student.qid}</td>
-          <td>${student.email}</td>
-          <td>${student.program}</td>
-          <td>${student.branch}</td>
-        </tr>
-      `;
-    });
+  function showError(message) {
+    errorMsg.innerText = message;
+    loading.style.display = "none";
   }
+
+  async function loadPage() {
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get("id");
+
+    if (!eventId) return showError("Missing event ID in URL.");
+
+    loading.style.display = "block";
+
+    // 1️⃣ Load event details from eventDetails
+    const eventRef = doc(db, "eventDetails", eventId);
+    const eventSnap = await getDoc(eventRef);
+
+    if (!eventSnap.exists()) {
+      return showError("Event not found in eventDetails collection.");
+    }
+
+    const event = eventSnap.data();
+
+    // Set UI
+    document.getElementById("eventTitle").innerText = event.title;
+    document.getElementById("eventDate").innerText =
+      "📅 " + new Date(event.date).toDateString();
+
+    if (event.venue) {
+      document.getElementById("eventVenue").innerText = "📍 " + event.venue;
+    }
+
+    if (event.poster) {
+      const posterEl = document.getElementById("poster");
+      posterEl.src = event.poster;
+      posterEl.style.display = "block";
+    }
+
+    // 2️⃣ Load registrations from eventRegistrations
+    const regQuery = query(
+      collection(db, "eventRegistrations"),
+      where("eventId", "==", eventId)
+    );
+
+    const regSnap = await getDocs(regQuery);
+    loading.style.display = "none";
+    eventArea.style.display = "block";
+
+    const count = regSnap.size;
+    document.getElementById("statsBox").innerText = `${count} Students Registered`;
+
+    if (regSnap.empty) {
+      noData.innerText = "No registrations yet.";
+      return;
+    }
+
+    table.style.display = "table";
+
+    // 3️⃣ Populate table
+    for (const regDoc of regSnap.docs) {
+      const qid = regDoc.data().qid;
+
+      const studentSnap = await getDocs(
+        query(collection(db, "students"), where("qid", "==", qid))
+      );
+
+      if (!studentSnap.empty) {
+        const s = studentSnap.docs[0].data();
+        tableBody.innerHTML += `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.qid}</td>
+            <td>${s.email}</td>
+            <td>${s.program}</td>
+            <td>${s.branch}</td>
+          </tr>
+        `;
+      }
+    }
+  }
+
+  loadPage();
 </script>
 
 </body>
 </html>
-
-
